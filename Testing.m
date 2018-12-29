@@ -1,14 +1,13 @@
 Config
-start_image = 264;
-end_image = 264;
-no_images=end_image-start_image+1;
-radius = 50;
-x1 = 1;
-x2 = 1020;
-y1 = 1;
-y2 = 1041;
 
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
+
+%%
+IMS = thresh_invert(IMS, bit, 95);
+x = 20;
+img = IMS(:,:,x);
+figu
+imshow(img, []);
 %%
 
 IMS = thresh_invert(IMS, bit, 95);

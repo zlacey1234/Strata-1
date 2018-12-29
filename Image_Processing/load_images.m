@@ -25,11 +25,14 @@ function [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagef
 % dx and dy represent the range for the bounded region
 dx = x2 - x1 + 1; 
 dy = y2 - y1 + 1;
+% no_images represents the number of image slices
 no_images=end_image-start_image+1;
+%initializes an (dx)x(dy)x(no_images) Matrix
 IMS=(zeros(dy,dx,no_images));
 j=0;
 for i=start_image:end_image %bottom z slice to top
     j=j+1;
+    display(j);
     %imhist(imread([imagefolder imageprefix num2str(i,'%04.0f') '.jpg']));
     IMSr=double(imread([imagefolder imageprefix num2str(i,'%04.0f') '.jpg']));%the image that is a single z slice
     im=IMSr(y1:y2,x1:x2);%selects the 2d region of interest as the region to put in the 3d image at slice i
