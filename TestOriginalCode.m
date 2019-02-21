@@ -14,18 +14,23 @@ close all
 
 % initializes the parameters
 Config
-% radius = 12;
-% sigma0 = 2;
-% h = 10;
-% local_ind = 10;
-% local_sph_IND = 10;
+ radius = 2;
+ sigma0 = 1;
+ h = 9;
+ local_ind = 10;
+ local_sph_IND = 10;
 % Out = analyze_scan_orientations(imagefolder, imageprefix, start_image, end_image, x1,x2,y1,y2,radius,sigma0,1,local_ind,local_sph_IND,h);
-Gauss3D = single(Gaussian_Filter_3D(1,0,25));
+% Gauss3D = single(Gaussian_Filter_3D(1,0,10));
+kx=round(2.5*radius);%these are the matrix dimesions of the box that contains the kernel
+ky=round(2.5*radius);
+kz=round(2.5*radius/AR_z);%AR_z=1 currently
+
+Gauss3D = single(Gauss_sphere(radius,sigma0,kx,ky,kz,AR_z));
 
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
 
 save('ImageMatrix.mat', 'IMS');
-%IMS = thresh_invert(IMS, bit, 95);
+IMS = thresh_invert(IMS, bit, 99);
 
 Cr = 50;
 IMSbp = single(zeros(size(IMS,1)-2*Cr,size(IMS,2)-2*Cr,no_images)); 
@@ -39,7 +44,7 @@ IMSCr = max(max(max(IMSbp))) - IMSbp;
 dffs = diff(hst);
 thres_val = round(bins(find(dffs < 0, 1,'last')+1));
 IMSCr = IMSCr > thres_val; %thresholding value may change for different frames
-
+imshow(IMSCr(:,:,1),[])
 %%
 %Convolve
 disp('a_s: Convolving... This may take a while');
@@ -50,7 +55,7 @@ sC=size(Convol);%convolve does change size by adding a Kernel radius on either s
 Convol=Convol( round(sizekernel(1)/2) : round(sC(1) - sizekernel(1)/2) ...
             ,  round(sizekernel(2)/2) : round(sC(2) - sizekernel(2)/2) ...
             ,  round(sizekernel(3)/2) : round(sC(3) - sizekernel(3)/2)  );%crops (radius of the kernel*2) in order to bring Covol back to the same dimensions as the bandpassed image
-
+imshow(Convol(:,:,1),[])
 sIMSCr=size(IMSCr); 
 sC=size(Convol);
 if sIMSCr~=sC
@@ -60,7 +65,7 @@ end
 %% create pkswb (thresholded convolution image)
 disp('a_s: Thresholding');
 %TWEAK THRESHOLD
-pksbw = Convol > 0;
+pksbw = Convol > -.3;
 imshow(pksbw(:,:,1),[])
 %%
 disp('a_s: Tagging regions');
