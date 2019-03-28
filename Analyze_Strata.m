@@ -20,35 +20,13 @@ Config
 % local_ind = 10;
 % local_sph_IND = 10;
 % Out = analyze_scan_orientations(imagefolder, imageprefix, start_image, end_image, x1,x2,y1,y2,radius,sigma0,1,local_ind,local_sph_IND,h);
-Gauss2D = single(Gaussian_Filter_2D(1,0,25));
+%Gauss2D = single(Gaussian_Filter_2D(1,0,25));
 
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
 
 save('ImageMatrix.mat', 'IMS');
 %IMS = thresh_invert(IMS, bit, 95);
 
-Cr = 50;
-IMSbp = single(zeros(size(IMS,1)-2*Cr,size(IMS,2)-2*Cr,no_images)); 
+IMS = IMS > 100; % 105 if a decent value
 
-for b=1:no_images
-    IMSbp(:,:,b)=single(bpass_jhw(IMS(:,:,b),0.5,Cr));
-end
-IMSCr = max(max(max(IMSbp))) - IMSbp;
-
-[hst,bins] = hist(IMSCr(:),100);
-dffs = diff(hst);
-thres_val = round(bins(find(dffs < 0, 1,'last')+1));
-IMSCr = IMSCr > thres_val; %thresholding value may change for different frames
-
-%imshow(IMSCr(:,:,3),[])
-
-% IMSFilt = jcorr3d(IMS, Gauss3D, 1);
-% 
-% 
-% 
-% tic
-% [centers, radii, metric] = imfindcircles(IMSCr(:,:,3),[10 40]);
-% toc
-% viscircles(centers, radii,'EdgeColor','b');
-testIMS = conv2(IMS,Gauss2D);
-imshow(testIMS, []);
+imshow(IMS,[])
