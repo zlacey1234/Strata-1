@@ -1,14 +1,15 @@
 % This m-file is used to initialize the  
 addpath('./Image_Processing');
 
-imagefolder = ('D:\Strata Data\Strata1 XCT jpgs\Beads1_ImageStack\JPEGS\');
+%imagefolder = ('D:\Strata Data\Strata1 XCT jpgs\Beads1_ImageStack\JPEGS\');
+imagefolder = ('D:\Strata Data\Strata1 XCT tifs\Beads1_ImageStack\Tiffs\');
 %imagefolder = ('C:\Users\zlace\OneDrive\Documents\Strata-1 Research\Strata-1 Code\Strata-1 Image Data\Strata1 XCT jpgs\Beads1_ImageStack\JPEGS\');
 imageprefix = ('Beads1');
 start_image = 500;
-end_image = 500;
+end_image = 501;
 no_images=end_image-start_image+1;
 radius = 40;
-splits = 1;
+splits = 3;
 AR_z = 1;
 x1 = 1;
 x2 = 1020;

@@ -14,12 +14,11 @@ close all
 
 % initializes the parameters
 Config
- radius = 2;
- sigma0 = 1;
- h = 9;
- local_ind = 10;
- local_sph_IND = 10;
-% Out = analyze_scan_orientations(imagefolder, imageprefix, start_image, end_image, x1,x2,y1,y2,radius,sigma0,1,local_ind,local_sph_IND,h);
+radius = 26/2;
+sigma0 = 1;
+h = 9;
+local_ind = 10;
+local_sph_IND = 10;
 % Gauss3D = single(Gaussian_Filter_3D(1,0,10));
 kx=round(2.5*radius);%these are the matrix dimesions of the box that contains the kernel
 ky=round(2.5*radius);
@@ -29,43 +28,71 @@ Gauss3D = single(Gauss_sphere(radius,sigma0,kx,ky,kz,AR_z));
 
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
 
+figure(1)
+imshow(IMS(:,:,1),[])
+title('Original Image');
+
 save('ImageMatrix.mat', 'IMS');
 IMS = thresh_invert(IMS, bit, 99);
 
-Cr = 50;
+figure(2)
+imshow(IMS(:,:,1),[])
+title('Threshold and Invert');
+
+Cr = 2*radius;
 IMSbp = single(zeros(size(IMS,1)-2*Cr,size(IMS,2)-2*Cr,no_images)); 
 
 for b=1:no_images
     IMSbp(:,:,b)=single(bpass_jhw(IMS(:,:,b),0.5,Cr));
 end
+
+figure(3)
+imshow(IMSbp(:,:,1),[])
+title('Bandpass');
+
 IMSCr = max(max(max(IMSbp))) - IMSbp;
 
+figure(4)
+imshow(IMSCr(:,:,1),[])
+title('Cropped Image');
+imtool(IMSCr(:,:,1),[])
 [hst,bins] = hist(IMSCr(:),100);
 dffs = diff(hst);
 thres_val = round(bins(find(dffs < 0, 1,'last')+1));
 IMSCr = IMSCr > thres_val; %thresholding value may change for different frames
+
+figure(5)
 imshow(IMSCr(:,:,1),[])
+title('Cropped Image Threshold');
+
 %%
 %Convolve
 disp('a_s: Convolving... This may take a while');
 Convol=single(jcorr3d(IMSbp,Gauss3D,splits));
 
-sizekernel=size(Gauss3D);
-sC=size(Convol);%convolve does change size by adding a Kernel radius on either side of all dimmensions
-Convol=Convol( round(sizekernel(1)/2) : round(sC(1) - sizekernel(1)/2) ...
-            ,  round(sizekernel(2)/2) : round(sC(2) - sizekernel(2)/2) ...
-            ,  round(sizekernel(3)/2) : round(sC(3) - sizekernel(3)/2)  );%crops (radius of the kernel*2) in order to bring Covol back to the same dimensions as the bandpassed image
+figure(6)
 imshow(Convol(:,:,1),[])
-sIMSCr=size(IMSCr); 
-sC=size(Convol);
-if sIMSCr~=sC
-    disp('error: size of bandpassed image ~= to convolved+cropped image')
-    return
-end
+title('Convolved Image');
+
+% sizekernel=size(Gauss3D);
+% sC=size(Convol);%convolve does change size by adding a Kernel radius on either side of all dimmensions
+% Convol=Convol( round(sizekernel(1)/2) : round(sC(1) - sizekernel(1)/2) ...
+%             ,  round(sizekernel(2)/2) : round(sC(2) - sizekernel(2)/2) ...
+%             ,  round(sizekernel(3)/2) : round(sC(3) - sizekernel(3)/2)  );%crops (radius of the kernel*2) in order to bring Covol back to the same dimensions as the bandpassed image
+% sIMSCr=size(IMSCr); 
+% sC=size(Convol);
+% if sIMSCr~=sC
+%     disp('error: size of bandpassed image ~= to convolved+cropped image')
+%     return
+% end
+figure
+imshow(Convol(:,:,1),[])
+imtool(Convol(:,:,1),[])
 %% create pkswb (thresholded convolution image)
 disp('a_s: Thresholding');
 %TWEAK THRESHOLD
-pksbw = Convol > -.3;
+pksbw = Convol > -2;%-0.5e+1;
+figure
 imshow(pksbw(:,:,1),[])
 %%
 disp('a_s: Tagging regions');
