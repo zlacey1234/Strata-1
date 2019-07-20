@@ -16,19 +16,12 @@ close all
 Config
 %%
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
-save('ImageMatrix.mat', 'IMS');
-figure
+% save('ImageMatrix.mat', 'IMS');
 IMS = IMS > 104;        % 105 is a decent value
 
-figure
-imshow(IMS(:,:,1),[]);
-
+im
 se = strel('sphere', 10);
 afterErode = imerode(IMS,se);
-
-figure
-imshow(afterErode(:,:,1),[]);
-
 fprintf('Done Eroding Image');
 %%
 disp('a_s: Tagging regions');
@@ -48,12 +41,6 @@ s=regionprops(L3,'PixelIdxList', 'PixelList');%s is a struct that holds structs 
 %bandpassed image
 fprintf('Done');
 %% 
-logFlag = 1;
-dateString = datestr(now,'mmmm_dd_yyyy_HH_MM_SS_FFF');
-scanSet = '/Scan_Set_1';
-folderName = 'D:\Strata-1\ResultLogs';
-ExtractedPositionLog = [folderName scanSet '_PositionExtraction' dateString '.log'];
-
 Result=zeros(numel(s),11);
 for k = 1:numel(s);%#elements in s (#regions or particles)
 %for k = 4236
@@ -78,7 +65,7 @@ for k = 1:numel(s);%#elements in s (#regions or particles)
         fprintf(pFile, '%6.6f,',Result(k,2));
         fprintf(pFile, '%6.6f,',Result(k,3));
         fprintf(pFile, '%6.6f,',Result(k,4));
-        fprintf(pFile, '%9.6f\n',Result(k,5));
+        fprintf(pFile, '%6.6f\n',Result(k,5));
         
         fclose(pFile);
     end
