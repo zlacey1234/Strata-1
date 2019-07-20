@@ -12,7 +12,8 @@ maxPixelValue = data1(:,4);
 sumPixelAreaValue = data1(:,5);
 
 logFlag = 1;
-folderName = 'D:\Strata-1\ResultLogs\LargeandMediumBeadScanLog\';
+% folderName = 'D:\Strata-1\ResultLogs\LargeandMediumBeadScanLog\';
+folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs\LargeandMediumBeadScanLog\';
 LargeBeadPositionLog = [folderName file1 '_LargeBeadPosition' '.log'];
 
 largeBeadCounter = 1;
@@ -21,7 +22,7 @@ mediumBeadCounter = 1;
 largeBeadResult = zeros(numel(x),4);
 mediumBeadResult = zeros(numel(x),4);
 for k = 1:numel(x)
-    if sumPixelAreaValue(k) >= 1e+5;
+    if sumPixelAreaValue(k) >= 9e+5;
         fprintf('This Bead is Large\n');
         largeBeadResult(largeBeadCounter,1:3) = [x(k) y(k) z(k)];
         largeBeadResult(largeBeadCounter,4) = sumPixelAreaValue(k);
@@ -40,7 +41,7 @@ for k = 1:numel(x)
         end
         
         largeBeadCounter = largeBeadCounter + 1;    
-    elseif sumPixelAreaValue(k) < 7.5e+4 && sumPixelAreaValue(k) >= 1e+3
+    elseif sumPixelAreaValue(k) < 7.5e+4 && sumPixelAreaValue(k) >= 1e+4
         fprintf('This Bead is Medium\n');
         mediumBeadResult(mediumBeadCounter,1:3) = [x(k) y(k) z(k)];
         mediumBeadResult(mediumBeadCounter,4) = sumPixelAreaValue(k);
@@ -61,7 +62,8 @@ end
 %     hold off
 % end
 % 
-% for n = 1:20
+%% Test
+% for n = 40:41
 %     figure(n + largeBeadCounter - 1)
 %     hold on
 %     z_slice = round(mediumBeadResult(n,3)) - 452

@@ -11,40 +11,25 @@ sumPixelArea = data1(:,4);
 beadDiameterMeters = data1(:,5);
 
 figure(2)
-% xCenter = x(1)/12.78; % Convert pixel to millimeter: 12.78 px/mm
-% yCenter = y(1)/12.78;
-% zCenter = z(1)/12.78;
-% radius = 5 % Radius of the Bead (millimeters)
-% 
-% [x1,y1,z1] = sphere;
-% x1 = x1*radius;
-% y1 = y1*radius;
-% z1 = z1*radius;
-% 
-% h = surf(x1 + xCenter, y1 + yCenter, z1 + zCenter);
-% set(h,'FaceColor',[0.4940 , 0.1840, 0.5560], ...
-%     'FaceAlpha', 0.5, 'FaceLighting', 'gouraud', 'EdgeColor', 'none');
-% camlight
-% hold on
-
+camlight
 for k = 1:numel(x)
     if (beadDiameterMeters(k) == 10)
-        xCenter = x(k)/12.78; % Convert pixel to millimeter: 12.78 px/mm
-        yCenter = y(k)/12.78;
-        zCenter = z(k)/14.08;
+        xCenter = x(k)/14; % Convert pixel to millimeter: 14 px/mm
+        yCenter = y(k)/14;
+        zCenter = z(k)/14;
         radius = 5 % Radius of the Bead (millimeters) 
         
         [x1,y1,z1] = sphere;
         x1 = x1*radius;
         y1 = y1*radius;
         z1 = z1*radius;
-        
+
         h = surf(x1 + xCenter, y1 + yCenter, z1 + zCenter);
         set(h,'FaceColor',[0.494, 0.1840, 0.5560], ...
             'FaceAlpha', 0.5, 'FaceLighting', 'gouraud', 'EdgeColor', 'none');
-        camlight
         hold on
         axis equal
     end
 end
+
 

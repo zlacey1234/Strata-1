@@ -11,15 +11,14 @@
 clear
 clc
 close all
-
+%%
 % initializes the parameters
 Config
-%%
-[IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
-save('ImageMatrix.mat', 'IMS');
-figure
-IMS = IMS > 104;        % 105 is a decent value
 
+[IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
+% save('ImageMatrix.mat', 'IMS');
+IMS = IMS > 104;        % 105 is a decent value
+%%
 figure
 imshow(IMS(:,:,1),[]);
 
@@ -37,6 +36,7 @@ disp('a_s: Imposing Volume minimum');
 Resultunf=regionprops(L,'Area');%[NOTE L is array of TAGGED regions]; creates structure Resultunf with one 1x1 matricies(in a col) that are the areas of the tagged regions (sequentially by tag #) 
 idx=find([Resultunf.Area]>0);%index of all regions with nonzero area
 L2=ismember(L,idx);%output is array with size L of 1's where elements of L are in the set idx~which is just 1:number of regions. Therefore it converts all tagged regions to all 1's
+%%
 L3=bwlabeln(L2);% L3 now retaggs (L3=old L2)
 fprintf('Done Tagging');
 %%
@@ -48,25 +48,28 @@ s=regionprops(L3,'PixelIdxList', 'PixelList');%s is a struct that holds structs 
 %bandpassed image
 fprintf('Done');
 %% 
+
 logFlag = 1;
 dateString = datestr(now,'mmmm_dd_yyyy_HH_MM_SS_FFF');
 scanSet = '/Scan_Set_1';
-folderName = 'D:\Strata-1\ResultLogs';
+%folderName = 'D:\Strata-1\ResultLogs';
+folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs';
 ExtractedPositionLog = [folderName scanSet '_PositionExtraction' dateString '.log'];
 
 Result=zeros(numel(s),11);
-for k = 1:numel(s);%#elements in s (#regions or particles)
+for k = 1:numel(s)%#elements in s (#regions or particles)
 %for k = 4236
     idx = s(k).PixelIdxList;%lin index of all points in region k
-    pixel_values = double(IMS(idx)+.0001);%list of values of the pixels in convol which has size of idx
+    pixel_values = double(IMS(idx));%list of values of the pixels in convol which has size of idx
     sum_pixel_values = sum(pixel_values);   
     x = s(k).PixelList(:, 1);%the list of x-coords of all points in the region k WITH RESPECT TO the bandpassed image
     y = s(k).PixelList(:, 2);
     z = s(k).PixelList(:, 3);
-    xbar = sum(x .* pixel_values)/sum_pixel_values;%PLUS Cr BECAUSE
+    xbar = sum(x .* pixel_values)/sum_pixel_values;
     ybar = sum(y .* pixel_values)/sum_pixel_values;%I CUT OFF Cr OF THE IMAGE DURING BANDPASS!(in x and y only) AND cropped kernelradius/2 off each side (in x,y,z)(but it was put back)                                                         %cropped radius/2 of each side
-    zbar = sum(z .* pixel_values)/sum_pixel_values     -1;
-    Result(k,1:3) = [xbar+x1-1 ybar+y1-1 zbar+start_image-1];
+    zbar = sum(z .* pixel_values)/sum_pixel_values;
+    %Result(k,1:3) = [xbar+x1-1 ybar+y1-1 zbar+start_image-1];
+    Result(k,1:3) = [xbar+x1 ybar+y1 zbar+start_image];
     Result(k,4)   = max(pixel_values);
     Result(k,5)   = sum_pixel_values;
     
@@ -84,18 +87,18 @@ for k = 1:numel(s);%#elements in s (#regions or particles)
     end
 end
 fprintf('Finished');
- %%
-figure 
-hold on
-imtool(afterErode(:,:,70),[]);
-figure 
-hold on
-imshow(afterErode(:,:,72),[]);
-figure 
-hold on
-imshow(afterErode(:,:,68),[]);
-figure 
-hold on
-imshow(afterErode(:,:,70),[]);
+%  %%
+% figure 
+% hold on
+% imtool(afterErode(:,:,70),[]);
+% figure 
+% hold on
+% imshow(afterErode(:,:,72),[]);
+% figure 
+% hold on
+% imshow(afterErode(:,:,68),[]);
+% figure 
+% hold on
+% imshow(afterErode(:,:,70),[]);
 % % viscircles([87,654], 32,'EdgeColor','b');
 % % viscircles([777-510,656], 32,'EdgeColor','b');
