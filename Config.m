@@ -5,17 +5,17 @@ imagefolder = ('D:\Strata Data\Strata1 XCT jpgs\Beads1_ImageStack\JPEGS\');
 %imagefolder = ('D:\Strata Data\Strata1 XCT tifs\Beads1_ImageStack\Tiffs\');
 %imagefolder = ('C:\Users\zlace\OneDrive\Documents\Strata-1 Research\Strata-1 Code\Strata-1 Image Data\Strata1 XCT jpgs\Beads1_ImageStack\JPEGS\');
 imageprefix = ('Beads1');
-start_image = 160;
-end_image = 300;
+start_image = 452;
+end_image = 482;%592;
 no_images=end_image-start_image+1;
-% x1 = 1;
+x1 = 1;
+x2 = 1020;
+y1 = 1;
+y2 = 1041;
+% x1 = 510;
 % x2 = 1020;
 % y1 = 1;
-% y2 = 1041;
-x1 = 1;
-x2 = 510;
-y1 = 1;
-y2 = 520;
+% y2 = 720;
 
 
 logFlag = 1;

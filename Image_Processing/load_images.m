@@ -33,10 +33,10 @@ j=0;
 for i=start_image:end_image %bottom z slice to top
     j=j+1;
     %imhist(imread([imagefolder imageprefix num2str(i,'%04.0f') '.jpg']));
-    IMSr=double(imread([imagefolder imageprefix num2str(i,'%04.0f') '.tif']));%the image that is a single z slice
+    IMSr=double(imread([imagefolder imageprefix num2str(i,'%04.0f') '.jpg']));%the image that is a single z slice
     im=IMSr(y1:y2,x1:x2);%selects the 2d region of interest as the region to put in the 3d image at slice i
     IMS(:,:,j)=im;
 end
 display('Done Loading Images');
-info = imfinfo([imagefolder imageprefix num2str(i,'%04.0f') '.tif']);
+info = imfinfo([imagefolder imageprefix num2str(i,'%04.0f') '.jpg']);
 bit = info.BitDepth;

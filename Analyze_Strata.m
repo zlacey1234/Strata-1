@@ -23,7 +23,7 @@ IMS = IMS > 104;        % 105 is a decent value
 figure
 imshow(IMS(:,:,1),[]);
 
-se = strel('sphere', 10);
+se = strel('sphere', 9);
 afterErode = imerode(IMS,se);
 
 figure
@@ -84,9 +84,18 @@ for k = 1:numel(s);%#elements in s (#regions or particles)
     end
 end
 fprintf('Finished');
-%%
+ %%
 figure 
 hold on
-imshow(IMS(:,:,103),[]);
-% viscircles([87,654], 32,'EdgeColor','b');
-% viscircles([777-510,656], 32,'EdgeColor','b');
+imtool(afterErode(:,:,70),[]);
+figure 
+hold on
+imshow(afterErode(:,:,72),[]);
+figure 
+hold on
+imshow(afterErode(:,:,68),[]);
+figure 
+hold on
+imshow(afterErode(:,:,70),[]);
+% % viscircles([87,654], 32,'EdgeColor','b');
+% % viscircles([777-510,656], 32,'EdgeColor','b');
