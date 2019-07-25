@@ -16,7 +16,7 @@ close all
 Config
 
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
-save('ImageMatrix.mat', 'IMS','-v7.3');
+save('ImageMatrix.mat', 'IMS');
 IMS = IMS > 104;        % 105 is a decent value
 %%
 figure
@@ -32,21 +32,17 @@ fprintf('Done Eroding Image');
 %%
 disp('a_s: Tagging regions');
 L=bwlabeln(afterErode);%output is an array with size of pksbw where all touching pixels in the 3d array have the same id number, an integer)
-clear afterErode;
+
 disp('a_s: Imposing Volume minimum');
 Resultunf=regionprops(L,'Area');%[NOTE L is array of TAGGED regions]; creates structure Resultunf with one 1x1 matricies(in a col) that are the areas of the tagged regions (sequentially by tag #) 
 idx=find([Resultunf.Area]>0);%index of all regions with nonzero area
-clear Resultunf;
 L2=ismember(L,idx);%output is array with size L of 1's where elements of L are in the set idx~which is just 1:number of regions. Therefore it converts all tagged regions to all 1's
-clear L
 %%
 L3=bwlabeln(L2);% L3 now retaggs (L3=old L2)
-clear L2;
 fprintf('Done Tagging');
 %%
 disp('a_s: Determining weighted centroid locations and orientations');
 s=regionprops(L3,'PixelIdxList', 'PixelList');%s is a struct that holds structs for each tagged 
-clear L3;
 %region. the 2nd level struct holds two matricies: pxlidlist is the linear indicies
 %of the nonzero pxls in that region. pxllist is the
 %coordinates of each pxl in that region. NOTE:these indicies apply to the
@@ -57,13 +53,9 @@ fprintf('Done');
 logFlag = 1;
 dateString = datestr(now,'mmmm_dd_yyyy_HH_MM_SS_FFF');
 scanSet = '/Scan_Set_1';
-folderName = 'D:\Strata-1\ResultLogs';
-%folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs';
+%folderName = 'D:\Strata-1\ResultLogs';
+folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs';
 ExtractedPositionLog = [folderName scanSet '_PositionExtraction' dateString '.log'];
-
-IMS = load('ImageMatrix.mat');
-IMS = IMS.IMS;
-IMS = IMS > 104;
 
 Result=zeros(numel(s),11);
 for k = 1:numel(s)%#elements in s (#regions or particles)
