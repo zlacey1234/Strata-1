@@ -1,3 +1,6 @@
+clear
+close all
+clc
 [file1,path1] = uigetfile('*.log');
 file1
 filepath1 = [path1 file1];
@@ -12,9 +15,10 @@ maxPixelValue = data1(:,4);
 sumPixelAreaValue = data1(:,5);
 
 logFlag = 1;
-% folderName = 'D:\Strata-1\ResultLogs\LargeandMediumBeadScanLog\';
-folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs\LargeandMediumBeadScanLog\';
+folderName = 'D:\Strata-1\ResultLogs\LargeandMediumBeadScanLog\';
+% folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs\LargeandMediumBeadScanLog\';
 LargeBeadPositionLog = [folderName file1 '_LargeBeadPosition' '.log'];
+MediumBeadPositionLog = [folderName file1 '_MediumBeadPosition' '.log'];
 
 largeBeadCounter = 1;
 mediumBeadCounter = 1;
@@ -41,10 +45,24 @@ for k = 1:numel(x)
         end
         
         largeBeadCounter = largeBeadCounter + 1;    
-    elseif sumPixelAreaValue(k) < 7.5e+4 && sumPixelAreaValue(k) >= 1e+4
+    elseif sumPixelAreaValue(k) < 9e+4 && sumPixelAreaValue(k) >= 3.5e+4
         fprintf('This Bead is Medium\n');
         mediumBeadResult(mediumBeadCounter,1:3) = [x(k) y(k) z(k)];
         mediumBeadResult(mediumBeadCounter,4) = sumPixelAreaValue(k);
+                
+        if ( logFlag )
+            pFile2 = fopen(MediumBeadPositionLog, 'a');
+            
+            % write csv log file
+            fprintf(pFile2, '%6.6f,',mediumBeadResult(mediumBeadCounter,1));
+            fprintf(pFile2, '%6.6f,',mediumBeadResult(mediumBeadCounter,2));
+            fprintf(pFile2, '%6.6f,',mediumBeadResult(mediumBeadCounter,3));
+            fprintf(pFile2, '%9.6f,',mediumBeadResult(mediumBeadCounter,4));
+            fprintf(pFile2, '%f\n',5); % Diameter of the Bead
+            
+            fclose(pFile2);
+        end
+        
         mediumBeadCounter = mediumBeadCounter + 1;
     else
         fprintf('May be a small bead\n');
@@ -53,20 +71,29 @@ end
 
 
 % %% Test and Visualize
-% for m = 1: largeBeadCounter - 1
-%     figure(m)
-%     hold on
-%     z_slice = round(largeBeadResult(m,3)) - 452;
-%     imshow(IMS(:,:,z_slice),[]);
-%     viscircles([largeBeadResult(m,1),largeBeadResult(m,2)], 64,'EdgeColor','b');
-%     hold off
-% end
 % 
-%% Test
-% for n = 40:41
-%     figure(n + largeBeadCounter - 1)
+% IMS = load('ImageMatrix.mat');
+% IMS = IMS.IMS;
+% IMS = IMS > 104;
+% % %%
+% % m1 = 133;
+% % m2 = 137;
+% % for m = m1: m2
+% %     figure(m)
+% %     hold on
+% %     z_slice = round(largeBeadResult(m,3)) - 160;
+% %     imshow(IMS(:,:,z_slice),[]);
+% %     viscircles([largeBeadResult(m,1),largeBeadResult(m,2)], 64,'EdgeColor','b');
+% %     hold off
+% % end
+% % 
+% %% Test
+% n1 = 906;
+% n2 = 920;
+% for n = n1:n2
+%     figure(n)
 %     hold on
-%     z_slice = round(mediumBeadResult(n,3)) - 452
+%     z_slice = round(mediumBeadResult(n,3)) - 160
 %     if z_slice <= 0
 %         z_slice = 1;
 %     end
