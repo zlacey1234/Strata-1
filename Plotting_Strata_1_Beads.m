@@ -10,7 +10,7 @@ z = data1(:,3);
 sumPixelArea = data1(:,4);
 beadDiameterMeters = data1(:,5);
 
-plotSpecifiedZSliceRangeSections = 1;
+plotSpecifiedZSliceRangeSections = 0;
 specifiedZSlice = 250;    % should be between 200 and 1800
 zSliceTolerance = 20; 
 
@@ -25,7 +25,7 @@ for k = 1:numel(x)
                 xCenter = x(k)/14; % Convert pixel to millimeter: 14 px/mm
                 yCenter = y(k)/14;
                 zCenter = z(k)/14;
-                radius = 5 % Radius of the Bead (millimeters)
+                radius = 5; % Radius of the Bead (millimeters)
                 
                 if sumPixelArea(k) >= 1.5e+6  % Represents 2 Large Beads
                     [x1,y1,z1] = sphere;
@@ -52,7 +52,7 @@ for k = 1:numel(x)
                 xCenter = x(k)/14; % Convert pixel to millimeter: 14 px/mm
                 yCenter = y(k)/14;
                 zCenter = z(k)/14;
-                radius = 2.5 % Radius of the Bead (millimeters)
+                radius = 2.5; % Radius of the Bead (millimeters)
                 
                 [x1,y1,z1] = sphere;
                 x1 = x1*radius;
@@ -71,7 +71,7 @@ for k = 1:numel(x)
             xCenter = x(k)/14; % Convert pixel to millimeter: 14 px/mm
             yCenter = y(k)/14;
             zCenter = z(k)/14;
-            radius = 5 % Radius of the Bead (millimeters)
+            radius = 5; % Radius of the Bead (millimeters)
             
             if sumPixelArea(k) >= 1.5e+6  % Represents 2 Large Beads
                 [x1,y1,z1] = sphere;
@@ -98,7 +98,7 @@ for k = 1:numel(x)
             xCenter = x(k)/14; % Convert pixel to millimeter: 14 px/mm
             yCenter = y(k)/14;
             zCenter = z(k)/14;
-            radius = 2.5 % Radius of the Bead (millimeters)
+            radius = 2.5; % Radius of the Bead (millimeters)
             
             [x1,y1,z1] = sphere;
             x1 = x1*radius;
