@@ -22,7 +22,7 @@ IMS = IMS > 104;        % 105 is a decent value
 figure
 imshow(IMS(:,:,1),[]);
 
-se = strel('sphere', 5);   % erosion radius of 9 is very good for both large and medium beads
+se = strel('sphere', 10);   % erosion radius of 9 is very good for both large and medium beads
 afterErode = imerode(IMS,se);
 clear IMS
 figure
@@ -86,6 +86,7 @@ for k = 1:numel(s)%#elements in s (#regions or particles)
         pFile = fopen( ExtractedPositionLog, 'a');
         
         % write csv log file
+        fprintf(pFile, '%f', 
         fprintf(pFile, '%6.6f,',Result(k,1));
         fprintf(pFile, '%6.6f,',Result(k,2));
         fprintf(pFile, '%6.6f,',Result(k,3));

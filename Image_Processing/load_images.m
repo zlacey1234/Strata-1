@@ -37,6 +37,6 @@ for i=start_image:end_image %bottom z slice to top
     im=IMSr(y1:y2,x1:x2);%selects the 2d region of interest as the region to put in the 3d image at slice i
     IMS(:,:,j)=im;
 end
-display('Done Loading Images');
+disp('Done Loading Images')
 info = imfinfo([imagefolder imageprefix num2str(i,'%04.0f') '.jpg']);
 bit = info.BitDepth;
