@@ -13,26 +13,32 @@ clc
 close all
 %%
 % initializes the parameters
-Config
+ConfigGrains
 
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
 save('ImageMatrix.mat', 'IMS','-v7.3');
 imtool(IMS(:,:,1),[]);
-IMS = IMS > 104;        
+IMS = IMS > 104;       
+
 %%
 figure
 imshow(IMS(:,:,1),[]);
 
-[rowsIMS, colsIMS, slicesIMS] = size(IMS);
+se = strel('sphere', erosionRadius);   % erosion radius of 9 is very good for both large and medium beads
+afterErode = imerode(IMS,se);
+clear IMS
+figure
+imshow(afterErode(:,:,1),[]);
+
+fprintf('Done Eroding Image');
+
+[rowsIMS, colsIMS, slicesIMS] = size(afterErode);
 
 for i = 1:slicesIMS
-    BW(:,:,i) = imfill(IMS(:,:,i),'holes');
+    BW(:,:,i) = imfill(afterErode(:,:,i),'holes');
     figure
     imshow(BW(:,:,i))
     title('Filled Image')
-    
-    se = strel('square', 2);   % erosion radius of 9 is very good for both large and medium beads
-    afterErode(:,:,i) = imerode(BW(:,:,i),se);
     
     figure
     imshow(afterErode(:,:,i),[]);

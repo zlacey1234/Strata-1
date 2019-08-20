@@ -18,14 +18,18 @@ ConfigGrains
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
 save('ImageMatrix.mat', 'IMS','-v7.3');
 imtool(IMS(:,:,1),[]);
-IMS = IMS > 16;        % 53 Good for Grain1 
+IMS = IMS > 104;        % 53 Good for Grain1; 16 Good for Grain2
 %%
 figure
 imshow(IMS(:,:,1),[]);
 
 [rowsIMS, colsIMS, slicesIMS] = size(IMS);
-
+tic
+% afterErode = imageProcessing(IMS,slicesIMS);
 for i = 1:slicesIMS
+    se = strel('disk', 2);   % erosion radius of 9 is very good for both large and medium beads
+    afterErode(:,:,i) = imerode(BW(:,:,i),se);
+    
     BW(:,:,i) = imfill(IMS(:,:,i),'holes');
     figure
     imshow(BW(:,:,i))
@@ -42,7 +46,7 @@ for i = 1:slicesIMS
 %     imshow(BW(:,:,i))
 %     title('Imclose Image Slice i');
 end
-
+disp(toc)
 % BW2 = imfill(IMS,'holes');
 % figure
 % imshow(BW2(:,:,1))
@@ -53,3 +57,23 @@ end
 % 
 % figure
 % imshow(afterErode(:,:,1),[]);
+
+% function afterErode = imageProcessing(IMS, slicesIMS)
+% for i = 1:slicesIMS
+%     BW(:,:,i) = imfill(IMS(:,:,i),'holes');
+%     figure
+%     imshow(BW(:,:,i))
+%     title('Filled Image')
+%     
+%     se = strel('square', 2);   % erosion radius of 9 is very good for both large and medium beads
+%     afterErode(:,:,i) = imerode(BW(:,:,i),se);
+%     
+%     figure
+%     imshow(afterErode(:,:,i),[]);
+% %     se = strel('disk', erosionRadius);
+% %     BW(:,:,i) = imclose(IMS(:,:,i), se);
+% %     figure
+% %     imshow(BW(:,:,i))
+% %     title('Imclose Image Slice i');
+% end
+% end
