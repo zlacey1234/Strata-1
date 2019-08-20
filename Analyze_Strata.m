@@ -22,7 +22,7 @@ IMS = IMS > 104;        % 105 is a decent value
 figure
 imshow(IMS(:,:,1),[]);
 
-se = strel('sphere', 5);   % erosion radius of 9 is very good for both large and medium beads
+se = strel('sphere', erosionRadius);   % erosion radius of 9 is very good for both large and medium beads
 afterErode = imerode(IMS,se);
 clear IMS
 figure
@@ -54,12 +54,12 @@ clear L3;
 fprintf('Done');
 %% 
 
-logFlag = 1;
-dateString = datestr(now,'mmmm_dd_yyyy_HH_MM_SS_FFF');
-scanSet = '/Scan_Set_1';
-folderName = 'D:\Strata-1\ResultLogs';
-%folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs';
-ExtractedPositionLog = [folderName scanSet '_PositionExtraction' dateString '.log'];
+% logFlag = 1;
+% dateString = datestr(now,'mmmm_dd_yyyy_HH_MM_SS_FFF');
+% scanSet = '/Scan_Set_1';
+% folderName = 'D:\Strata-1\ResultLogs';
+% %folderName = 'C:\Users\Zach\Documents\Strata-1-Zach_-New\ResultLogs';
+% ExtractedPositionLog = [folderName scanSet '_PositionExtraction' dateString '.log'];
 
 IMS = load('ImageMatrix.mat');
 IMS = IMS.IMS;

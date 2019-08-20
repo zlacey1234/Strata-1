@@ -22,6 +22,7 @@ logFlag = 1;
 dateString = datestr(now,'mmmm_dd_yyyy_HH_MM_SS_FFF');
 scanSet = '/Scan_Set_1';
 folderName = 'D:\Strata-1\ResultLogs';
-ExtractedPositionLog = [folderName scanSet '_PositionExtraction' dateString '.log'];
+erosionRadius = 11;
+ExtractedPositionLog = [folderName scanSet '_PositionExtraction_erosion' erosionRadius dateString '.log'];
 
 

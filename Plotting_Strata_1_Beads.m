@@ -10,11 +10,11 @@ z = data1(:,3);
 sumPixelArea = data1(:,4);
 beadDiameterMeters = data1(:,5);
 
-plotSpecifiedZSliceRangeSections = 0;
+plotSpecifiedZSliceRangeSections = 1;
 specifiedZSlice = 250;    % should be between 200 and 1800
-zSliceTolerance = 20; 
+zSliceTolerance = 30; 
 
-figure(2)
+figure(1)
 camlight
 for k = 1:numel(x)
     if (plotSpecifiedZSliceRangeSections == 1)

@@ -49,7 +49,7 @@ for k = 1:numel(x)
         centerXLargeBead = round(smallBeadResult(largeBeadCounter,1));
         centerYLargeBead = round(smallBeadResult(largeBeadCounter,2));
         
-        radius = 60;
+        radius = 50;
         L = (rowsInImage - centerYLargeBead).^2 ...
             + (columnsInImage - centerXLargeBead).^2 <= radius.^2;
         
@@ -104,8 +104,8 @@ end
 
 % 
 %%
-m1 = 1;
-m2 = 10;
+m1 = 16;
+m2 = 19;
 for m = m1: m2
     figure(m)
     hold on
@@ -115,20 +115,20 @@ for m = m1: m2
     hold off
 end
 % % % 
-% % %% Test
-% % n1 = 200;
-% % n2 = 250;
-% % for n = n1:n2
-% %     figure(n)
-% %     hold on
-% %     z_slice = round(mediumBeadResult(n,3)) - 160
-% %     if z_slice <= 0
-% %         z_slice = 1;
-% %     end
-% %     imshow(IMS(:,:,z_slice),[]);
-% %     viscircles([mediumBeadResult(n,1),mediumBeadResult(n,2)], 32,'EdgeColor','b');
-% %     hold off
-% % end
+%  %% Test
+% n1 = 18;
+% n2 = 19;
+% for n = n1:n2
+%     figure(n)
+%     hold on
+%     z_slice = round(mediumBeadResult(n,3)) - 160
+%     if z_slice <= 0
+%         z_slice = 1;
+%     end
+%     imshow(IMS(:,:,z_slice),[]);
+%     viscircles([mediumBeadResult(n,1),mediumBeadResult(n,2)], 32,'EdgeColor','b');
+%     hold off
+% end
 % % 
 % % %% Test
 % % zDesired = 700;
