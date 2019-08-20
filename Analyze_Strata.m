@@ -22,7 +22,7 @@ IMS = IMS > 104;        % 105 is a decent value
 figure
 imshow(IMS(:,:,1),[]);
 
-se = strel('sphere', 5);   % erosion radius of 9 is very good for both large and medium beads
+se = strel('sphere', erosionRadius);   % erosion radius of 9 is very good for both large and medium beads
 afterErode = imerode(IMS,se);
 clear IMS
 figure
