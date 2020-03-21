@@ -18,9 +18,13 @@ ConfigGrains
 tic
 [IMS, bit] = load_images(start_image, end_image, x1, x2, y1, y2, imagefolder, imageprefix);
 save('ImageMatrix.mat', 'IMS','-v7.3');
-IMS = IMS > 105;
+figure
 imshow(IMS(:,:,1));
-
+IMS = IMS > 105;% 105 Best for Bead 1
+               % 65 Best for Bead 2
+figure
+imshow(IMS(:,:,1));
+%imtool(IMS(:,:,1));
 [rowsIMS, colsIMS, slicesIMS] = size(IMS);
 for i = 1:slicesIMS
     BW(:,:,i) = imfill(IMS(:,:,i),4,'holes');

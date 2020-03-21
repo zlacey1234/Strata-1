@@ -1,4 +1,3 @@
-
 % Loading in Large, Medium, and Small Beads from csv log files
 %% First File Selected should be the Large Beads
 [file1,path1] = uigetfile('*.log');
@@ -104,9 +103,9 @@ end
 if (plotSmallBeads)
     scatter3(smallBeadx - xCenterCylinder,smallBeady - yCenterCylinder,smallBeadz - zCenterCylinder, 'r.')
 end
-xlabel('Position X (millimeters)');
-ylabel('Position Y (millimeters)');
-zlabel('Position Z (millimeters)');
+xlabel('Position X (millimeters)','FontSize', 20);
+ylabel('Position Y (millimeters)','FontSize', 20);
+zlabel('Position Z (millimeters)','FontSize', 20);
 legend('Large Beads', 'Medium Beads', 'Small Beads');
 
 %% 2D XY Cross-Section Specified Z Slice 
@@ -135,24 +134,24 @@ figure(3)
 hold on
 axis equal
 scatterhist(totalBeadsInRegion(:,1),totalBeadsInRegion(:,2),'Group',beadType,'Kernel','on');
-xlabel('Position X (millimeters)');
-ylabel('Position Y (millimeters)');
+xlabel('Position X (millimeters)','FontSize', 20);
+ylabel('Position Y (millimeters)','FontSize', 20);
 
 %% 2D XZ Cross-Section Specified Y Slice 
 specifiedYSlice = 520; % In pixels
 ySliceTolerance = 50; % In pixels
 
-toleranceBoolLargeBead = abs(specifiedYSlice/14 - largeBeady) <= ySliceTolerance/14
+toleranceBoolLargeBead = abs(specifiedYSlice/14 - largeBeady) <= ySliceTolerance/14;
 largeBeads = [largeBeadx largeBeady largeBeadz largeBeadDiameterMillimeters toleranceBoolLargeBead]';
 colsWithZeros = any(largeBeads==0);
 largeBeadsInRegion = largeBeads(:, ~colsWithZeros)';
 
-toleranceBoolMediumBead = abs(specifiedYSlice/14 - mediumBeady) <= ySliceTolerance/14
+toleranceBoolMediumBead = abs(specifiedYSlice/14 - mediumBeady) <= ySliceTolerance/14;
 mediumBeads = [mediumBeadx mediumBeady mediumBeadz mediumBeadDiameterMillimeters toleranceBoolMediumBead]';
 colsWithZerosMediumBeads = any(mediumBeads==0);
 mediumBeadsInRegion = mediumBeads(:, ~colsWithZerosMediumBeads)';
 
-toleranceBoolSmallBead = abs(specifiedYSlice/14 - smallBeady) <= ySliceTolerance/14
+toleranceBoolSmallBead = abs(specifiedYSlice/14 - smallBeady) <= ySliceTolerance/14;
 smallBeads = [smallBeadx smallBeady smallBeadz smallBeadDiameterMillimeters toleranceBoolSmallBead]';
 colsWithZerosSmallBeads = any(smallBeads==0);
 smallBeadsInRegion = smallBeads(:, ~colsWithZerosSmallBeads)';
@@ -164,5 +163,97 @@ figure(4)
 hold on
 axis equal
 scatterhist(totalBeadsInRegion(:,1),totalBeadsInRegion(:,3),'Group',beadType,'Kernel','on');
-xlabel('Position X (millimeters)');
-ylabel('Position Z (millimeters)');
+xlabel('Position X (millimeters)','FontSize', 20);
+ylabel('Position Z (millimeters)','FontSize', 20);
+
+%% 1D Z, Radial, and Theta Variation
+
+[thetaLargeBeads, rhoLargeBeads] = cart2pol(largeBeadx - xCenterCylinder,largeBeady - yCenterCylinder);
+thetaLargeBeads = rad2deg(thetaLargeBeads);
+[thetaMediumBeads, rhoMediumBeads] = cart2pol(mediumBeadx - xCenterCylinder, mediumBeady - yCenterCylinder);
+thetaMediumBeads = rad2deg(thetaMediumBeads);
+[thetaSmallBeads, rhoSmallBeads] = cart2pol(smallBeadx - xCenterCylinder, smallBeady - yCenterCylinder);
+thetaSmallBeads = rad2deg(thetaSmallBeads);
+
+%% Z Variation
+binWidthZVariation = 10; % Bin Width Size in (mm)
+edgesZVariation = 0:binWidthZVariation:140;
+
+% Count based Z Variation
+hLargeBeadsZVariation = histcounts(largeBeadz, edgesZVariation);
+hMediumBeadsZVariation = histcounts(mediumBeadz, edgesZVariation);
+hSmallBeadsZVariation = histcounts(smallBeadz, edgesZVariation);
+
+figure(5)
+bar(edgesZVariation(1:end-1), [hLargeBeadsZVariation; hMediumBeadsZVariation; hSmallBeadsZVariation]');
+title(['Z-Variation Histogram (Bin Width ' num2str(binWidthZVariation) ' millimeters)'],'FontSize', 20);
+xlabel('Z Position (millimeters)','FontSize', 20);
+ylabel('Number of Beads within Bin (count)','FontSize', 20);
+legend('Large Beads (10mm diameter)', 'Medium Beads (5mm diameter)', 'Small Beads (2mm diameter)'); 
+
+% Percent based Z Variation
+hLargeBeadsZVariationPercent = hLargeBeadsZVariation/numel(largeBeadz)*100;
+hMediumBeadsZVariationPercent = hMediumBeadsZVariation/numel(mediumBeadz)*100;
+hSmallBeadsZVariationPercent = hSmallBeadsZVariation/numel(smallBeadz)*100;
+
+figure(6)
+bar(edgesZVariation(1:end-1), [hLargeBeadsZVariationPercent; hMediumBeadsZVariationPercent; hSmallBeadsZVariationPercent]');
+title(['Z-Variation Histogram in Percent(Bin Width ' num2str(binWidthZVariation) ' millimeters)'],'FontSize', 20);
+xlabel('Z Position (millimeters)','FontSize', 20);
+ylabel('Percent of Beads within Bin (%)','FontSize', 20);
+legend('Large Beads (10mm diameter)', 'Medium Beads (5mm diameter)', 'Small Beads (2mm diameter)');
+set(gca,'FontSize',20)
+
+% Radial Variation
+binWidthRhoVariation = 2;
+edgesRhoVariation = 0:binWidthRhoVariation:36;
+numberOfRhoBin = numel(edgesRhoVariation);
+
+AreaRhoBins = zeros(numberOfRhoBin - 1,1);
+
+for iteration = 1:numberOfRhoBin - 1
+    AreaRhoBins(iteration) = pi.*(edgesRhoVariation(iteration +1).^2) - pi.*(edgesRhoVariation(iteration).^2);
+end
+   
+sumArea = sum(AreaRhoBins)
+% Count based Radial Variation
+hLargeBeadsRhoVariation = histcounts(rhoLargeBeads, edgesRhoVariation);
+hMediumBeadsRhoVariation = histcounts(rhoMediumBeads, edgesRhoVariation);
+hSmallBeadsRhoVariation = histcounts(rhoSmallBeads, edgesRhoVariation);
+
+figure(7)
+bar(edgesRhoVariation(1:end-1), [hLargeBeadsRhoVariation; hMediumBeadsRhoVariation; hSmallBeadsRhoVariation]');
+title(['Radial Variation Histogram (Bin Width ' num2str(binWidthRhoVariation) ' millimeters)'],'FontSize', 20);
+xlabel('Radius from Z axis (millimeters)','FontSize', 20);
+ylabel('Number of Beads within Bin (count)','FontSize', 20);
+legend('Large Beads (10mm diameter)', 'Medium Beads (5mm diameter)', 'Small Beads (2mm diameter)');
+
+sum(hLargeBeadsRhoVariation)
+
+hLargeBeadsRhoVariationPercent = (hLargeBeadsRhoVariation./numel(largeBeadz).*100)%./AreaRhoBins';
+hMediumBeadsRhoVariationPercent = hMediumBeadsRhoVariation./numel(mediumBeadz).*100%./AreaRhoBins';
+hSmallBeadsRhoVariationPercent = hSmallBeadsRhoVariation./numel(smallBeadz).*100%./AreaRhoBins';
+
+figure(8)
+bar(edgesRhoVariation(1:end-1), [hLargeBeadsRhoVariationPercent; hMediumBeadsRhoVariationPercent; hSmallBeadsRhoVariationPercent]');
+title(['Radial Variation Histogram (Bin Width ' num2str(binWidthRhoVariation) ' millimeters)'],'FontSize', 20);
+xlabel('Radius from Z axis (millimeters)','FontSize', 20);
+ylabel('Percent of Beads within Bin (%)','FontSize', 20);
+legend('Large Beads (10mm diameter)', 'Medium Beads (5mm diameter)', 'Small Beads (2mm diameter)');
+set(gca,'FontSize',20)
+
+hLargeBeadsRhoVariationPercentPerArea = hLargeBeadsRhoVariationPercent./AreaRhoBins';
+hMediumBeadsRhoVariationPercentPerArea = hMediumBeadsRhoVariationPercent./AreaRhoBins';
+hSmallBeadsRhoVariationPercentPerArea = hSmallBeadsRhoVariationPercent./AreaRhoBins';
+
+sumLargeBeadsRhoVariationPercent = sum(hLargeBeadsRhoVariationPercentPerArea)
+sumMediumBeadsRhoVariationPercent = sum(hMediumBeadsRhoVariationPercentPerArea)
+sumSmallBeadsRhoVariationPercent = sum(hSmallBeadsRhoVariationPercentPerArea)
+
+figure(9)
+bar(edgesRhoVariation(1:end-1), [hLargeBeadsRhoVariationPercentPerArea; hMediumBeadsRhoVariationPercentPerArea; hSmallBeadsRhoVariationPercentPerArea]');
+title(['Radial Variation Histogram (Bin Width ' num2str(binWidthRhoVariation) ' millimeters)'],'FontSize', 20);
+xlabel('Radius from Z axis (millimeters)','FontSize', 20);
+ylabel('Percent of Beads per Area within Bin (%/mm^2)','FontSize', 20);
+legend('Large Beads (10mm diameter)', 'Medium Beads (5mm diameter)', 'Small Beads (2mm diameter)');
+set(gca,'FontSize',20)
